@@ -1,117 +1,150 @@
-/*chandan Yadav ,A26 ,K1624*/
-#include <pthread.h>
-#include <unistd.h>
+/*chandan Yadav,A26,K1624*/
+/*question no 19*/
 #include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-
-int pmax=10;
-int rmax=10;
-pthread_t bankers[3][3];
-int Avail[10];
-int Max_Resource[3][3]= {{8,8,8},{7,7,7},{10,10,10}};
-int Alloc[3][3]={{3,2,1},{1,1,1},{2,2,2}};
-int Need[3][3];
-int countp=0, countr=0;
-int threadp=3, threadm=3;
-
-void * locate_function(void * re);
-void * check_function(void * re);
-
-pthread_mutex_t locking;
-	
-
-
+ 
+int current[5][5], maximum_resource[5][5], available[5];
+int allocation[5] = {0, 0, 0, 0, 0};
+int maxres[5], running[5], safe = 0;
+int counter = 0, i, j, exec, resources, processes, k = 1;
+ 
 int main()
 {
-	
-	printf("\n Banker's Algorithm \n");	
-
-	pthread_mutex_init(&locking, NULL);	
-
-	printf("/n Enter the maximum number of Processes:  ");
-	scanf("%d\n",&pmax);
-	
-	printf("/n Enter the maximum number of Resources:  ");
-	scanf("%d\n",&rmax);
-
-	Avail[rmax];
-
-	int i,j;
-	int res1=3, res2=2, res3=2;
-	
-	else
-	{
-		printf("\n Mutex Lock Initialized\n");
-	}
-		pthread_create(&bankers[0][0], NULL, &check_function, (void *)r1);
-		pthread_create(&bankers[1][0], NULL, &locate_function, (void *)r2);
-		pthread_create(&bankers[2][0], NULL, &locate_function, (void *)r3);
-
-		
-		for(i=0;i<threadp;i++)
-		{
-			for(j=0;j<threadm;j++)
-			{
-				pthread_join(bankers[0][0], NULL);
-				pthread_join(bankers[1][0], NULL);
-				pthread_join(bankers[2][0], NULL);
-				
-			}
-		}
-}
-
-
-void * check_function(void * re)
-{
-	int t_no = (int) re;
-	int x,y;
-	
-	printf("\n Thread Start with number: %d\n", t_no);
-
-	while(countp < pmax && countr < rmax)
-	{
-		pthread_mutex_lock(&locking);
-		Avail[x] = Max[x][y]-Alloc[countp++][countr++];
-		printf("\n Availabe is: %d\n",Avail[x]);
-		printf("check_function:\n thread : %d,\n Available : %d.\n Signalling done and Received.\n",t_no,Avail[y]);
-		countr++;
-		printf("check_function:\n thread : %d,\n New Need Now : %d.\n",t_no,Need[countp][countr]);
-	}
-	
-	pthread_mutex_unlock(&locking);
-}
-
-
-void * locate_function(void * re)
-{
-	int x,y,i,j;
-	int t_no = (int) re;
-	
-	for(i=0;i<pmax;i++)
-	{
-		for(j=0;j<rmax;j++)
-		{
-			Need[x][y]=Max[x][y]-Alloc[i][j];
-			printf("\n Allocation : %d,\n Need : %d\n",Alloc[i][j],Need[x][y]);
-		}
-	
-		pthread_mutex_lock(&mutex);
-    
-		if(countp==pmax && countr==rmax)
-		{
-		       printf("\nlocate_function:\n thread %d,\n Need = %d.\n Limit Reached.\n",t_no,Need[x][y]);
-       		}
-
-    		pthread_mutex_unlock(&mutex);
-		printf("\n locate_function:\n thread %d,\n nNeed = %d.\n Locking Mutex Unlocked.\n",t_no,Need[x][y]);
-    		sleep(5);
-    		
-		printf("\n Going to Check Function...\n");
-		check_function(void * re);
-	}
-
-	printf("\n Going to Check Function...\n");
-	check_function(void * re);
-	
+    printf("\nEnter number of processes: ");
+        scanf("%d", &processes);
+ 
+        for (i = 0; i < processes; i++) 
+    {
+            running[i] = 1;
+            counter++;
+        }
+ 
+        printf("\nEnter number of resources: ");
+        scanf("%d", &resources);
+ 
+        printf("\nEnter resources Vector:");
+        for (i = 0; i < resources; i++) 
+    { 
+            scanf("%d", &maxres[i]);
+        }
+ 
+       printf("\nEnter Allocated Resource Table:\n");
+        for (i = 0; i < processes; i++) 
+    {
+            for(j = 0; j < resources; j++) 
+        {
+              scanf("%d", &current[i][j]);
+            }
+        }
+ 
+        printf("\nEnter Maximum Claim Table:\n");
+        for (i = 0; i < processes; i++) 
+    {
+            for(j = 0; j < resources; j++) 
+        {
+                    scanf("%d", &maximum_resource[i][j]);
+            }
+        }
+ 
+    printf("\nThe resource Vector is: ");
+        for (i = 0; i < resources; i++) 
+    {
+            printf("\t%d", maxres[i]);
+    }
+ 
+        printf("\nThe Allocated Resource Table:\n");
+        for (i = 0; i < processes; i++) 
+    {
+            for (j = 0; j < resources; j++) 
+        {
+                    printf("\t%d", current[i][j]);
+            }
+        printf("\n");
+        }
+ 
+        printf("\nThe Maximum Claim Table:\n");
+        for (i = 0; i < processes; i++) 
+    {
+            for (j = 0; j < resources; j++) 
+        {
+                printf("\t%d", maximum_resource[i][j]);
+            }
+            printf("\n");
+        }
+ 
+        for (i = 0; i < processes; i++) 
+    {
+            for (j = 0; j < resources; j++) 
+        {
+                    allocation[j] += current[i][j];
+            }
+        }
+ 
+        printf("\nAllocated resources:");
+        for (i = 0; i < resources; i++) 
+    {
+            printf("\t%d", allocation[i]);
+        }
+ 
+        for (i = 0; i < resources; i++) 
+    {
+            available[i] = maxres[i] - allocation[i];
+    }
+ 
+        printf("\nAvailable resources:");
+        for (i = 0; i < resources; i++) 
+    {
+            printf("\t%d", available[i]);
+        }
+        printf("\n");
+ 
+        while (counter != 0) 
+    {
+            safe = 0;
+            for (i = 0; i < processes; i++) 
+        {
+                    if (running[i]) 
+            {
+                        exec = 1;
+                        for (j = 0; j < resources; j++) 
+                {
+                                if (maximum_resource[i][j] - current[i][j] > available[j]) 
+                    {
+                                    exec = 0;
+                                    break;
+                                }
+                        }
+                        if (exec) 
+                {
+                                printf("\nProcess%d is executing\n", i + 1);
+                                running[i] = 0;
+                                counter--;
+                                safe = 1;
+ 
+                                for (j = 0; j < resources; j++) 
+                    {
+                                    available[j] += current[i][j];
+                                }
+                            break;
+                        }
+                    }
+            }
+            if (!safe) 
+        {
+                    printf("\nThe processes are in unsafe state.\n");
+                    break;
+            } 
+        else 
+        {
+                    printf("\nThe process is in safe state");
+                    printf("\nAvailable vector:");
+ 
+                    for (i = 0; i < resources; i++) 
+            {
+                        printf("\t%d", available[i]);
+                    }
+ 
+                printf("\n");
+            }
+        }
+        return 0;
 }
